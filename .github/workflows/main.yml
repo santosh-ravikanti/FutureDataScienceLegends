@@ -1,0 +1,25 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Sync every hour
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        repository: nursnaaz/FutureDataScienceLegends # Replace with original repo details
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Sync changes
+      run: |
+        git remote add upstream https://github.com/nursnaaz/FutureDataScienceLegends
+        git fetch upstream
+        git checkout main
+        git merge upstream/main
+        git push origin main
